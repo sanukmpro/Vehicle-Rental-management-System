@@ -1,0 +1,95 @@
+@startuml VRMS ER Diagram
+
+skinparam backgroundColor #FEFEFE
+skinparam classFontSize 10
+skinparam classAttributeFontSize 9
+
+entity Users {
+  * id : INTEGER
+  --
+  firstName : VARCHAR
+  lastName : VARCHAR
+  * email : VARCHAR
+  password : VARCHAR
+  privilage : VARCHAR
+}
+
+entity Driver {
+  * id : INTEGER
+  --
+  name : VARCHAR
+  license_number : VARCHAR
+  phone : VARCHAR
+  email : VARCHAR
+  status : VARCHAR
+  photo : IMAGE
+  vehicle_types : TEXT
+}
+
+entity Vehicle {
+  * id : INTEGER
+  --
+  vehicle_name : VARCHAR
+  vehicle_number : VARCHAR
+  brand : VARCHAR
+  rent_price : INTEGER
+  fuel_type : VARCHAR
+  status : VARCHAR
+  vehicle_image : IMAGE
+  vehicle_type : VARCHAR
+}
+
+entity VehicleBooking {
+  * id : INTEGER
+  --
+  brand : VARCHAR
+  vehicle_name : VARCHAR
+  vehicle_type : VARCHAR
+  rent_price : DECIMAL
+  vehicle_number : VARCHAR
+  booking_date : DATE
+  booking_time : TIME
+  num_days : INTEGER
+  driver_needed : VARCHAR
+  email : VARCHAR
+  driver_accepted : BOOLEAN
+  status : VARCHAR
+}
+
+entity DriverRequests {
+  * id : INTEGER
+  --
+  requester_email : VARCHAR
+  vehicle_name : VARCHAR
+  vehicle_type : VARCHAR
+  lowest_bid : INTEGER
+  lowest_bidder_email : VARCHAR
+  user_accepted : BOOLEAN
+}
+
+entity Bids {
+  * id : INTEGER
+  --
+  vehicle_name : VARCHAR
+  requester_email : VARCHAR
+  bidder : VARCHAR
+  bid_amount : INTEGER
+}
+
+entity Notification {
+  * id : INTEGER
+  --
+  email : VARCHAR
+  message : TEXT
+  created_at : DATETIME
+  is_read : BOOLEAN
+}
+
+Users ||--o{ VehicleBooking : books
+Users ||--o{ Notification : receives
+Users ||--o{ DriverRequests : requests
+Vehicle ||--o{ VehicleBooking : booked
+VehicleBooking ||--o{ DriverRequests : creates
+DriverRequests ||--o{ Bids : receives
+
+@enduml

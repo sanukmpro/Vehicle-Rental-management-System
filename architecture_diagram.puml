@@ -1,0 +1,71 @@
+@startuml VRMS Architecture
+
+skinparam backgroundColor #FEFEFE
+skinparam rectangleFontSize 11
+skinparam rectangleFontColor #333333
+skinparam arrowFontSize 10
+
+rectangle "Client Layer" as Client #E3F2FD {
+  rectangle "Web Browser" as Browser
+}
+
+rectangle "Django Framework" as Django #F3E5F5 {
+  rectangle "URL Dispatcher\n(urls.py)" as URL
+  rectangle "Views\n(views.py)" as Views
+  rectangle "Templates\n(HTML)" as Templates
+  rectangle "Admin Interface" as Admin
+}
+
+rectangle "Django ORM" as ORM #FFF3E0 {
+  rectangle "Models" as Models
+  rectangle "Users, Vehicle,\nDriver, Booking,\nRequests, Bids,\nNotification" as Entities
+}
+
+rectangle "Database Layer" as DB #E8F5E8 {
+  rectangle "SQLite\n(db.sqlite3)" as SQLite
+  rectangle "Tables" as Tables
+}
+
+rectangle "File System" as Files #FFF8E1 {
+  rectangle "Media Files\n(/media/)" as Media
+  rectangle "Static Files\n(CSS, JS)" as Static
+}
+
+Browser --> URL : HTTP Request
+URL --> Views : Route
+Views --> Templates : Render
+Views --> Admin : Admin Access
+Views --> Models : Query/Update
+Models --> Entities : Define
+Entities --> SQLite : Persist
+SQLite --> Tables : Store
+Views --> Media : Upload/Serve
+Views --> Static : Serve
+
+note right of Client
+  User Interface
+  HTML/CSS/JS
+end note
+
+note right of Django
+  Business Logic
+  Request Handling
+  Response Generation
+end note
+
+note right of ORM
+  Data Abstraction
+  Object-Relational Mapping
+end note
+
+note right of DB
+  Data Persistence
+  SQLite Database
+end note
+
+note right of Files
+  Static Assets
+  User Uploads
+end note
+
+@enduml

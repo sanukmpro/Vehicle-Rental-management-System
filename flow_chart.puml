@@ -1,0 +1,57 @@
+@startuml VRMS Flow Chart
+
+skinparam backgroundColor #FEFEFE
+skinparam activityFontSize 11
+skinparam activityFontColor #333333
+skinparam arrowFontSize 10
+
+start
+
+:User Visits Website;
+
+:Home Page\nDisplay Vehicles;
+
+if (User Action?) then (Register)
+  :Create Account;
+  :Set Session;
+elseif (Login)
+  :Validate Credentials;
+  :Set Session;
+elseif (Browse Vehicles)
+  :Show Available Vehicles;
+elseif (View Dashboard)
+  :Show Bookings & Profile;
+endif
+
+:Select Vehicle;
+:Queue Booking\n(Date, Time, Duration, Driver?);
+
+:Booking Created\nStatus: Pending;
+
+if (Driver Needed?) then (Yes)
+  :Create Driver Request;
+  :Open Bidding System;
+  :Drivers Place Bids;
+  :Select Lowest Bid;
+  :Assign Driver;
+  :Notify User;
+else (No)
+  :Admin Review;
+  if (Approved?) then (Yes)
+    :Confirm Booking;
+    :Send Notification;
+  else (No)
+    :Reject Booking;
+  endif
+endif
+
+:Rental Period;
+:Complete Rental;
+:Update Status;
+:Vehicle Available;
+
+:User Feedback;
+
+stop
+
+@enduml
