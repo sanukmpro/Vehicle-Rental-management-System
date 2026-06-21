@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Vehicles | Admin</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-badge {
+    font-size: 12px;
+    background: #111;
+    color: #fff;
+    padding: 4px 12px;
+}
+
+/* PAGE */
+.container {
+    padding: 60px;
+}
+
+.container h1 {
+    font-size: 40px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+/* ADD BUTTON */
+
+.add-btn {
+    display: inline-block;
+    padding: 14px 22px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+.add-btn:hover {
+    background: #333;
+}
+
+/* TABLE */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    font-size: 14px;
+}
+
+tr:hover {
+    background: #fafafa;
+}
+
+/* ACTION BUTTONS */
+
+.action {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 8px 14px;
+    border: 1px solid #111;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+button:hover {
+    background: #111;
+    color: #fff;
+}
+
+.delete {
+    border: 1px solid #d33;
+    color: #d33;
+}
+
+.delete:hover {
+    background: #d33;
+    color: #fff;
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">VEHICLE RENTAL</div>
+    <a href="{% url 'admin_dashboard' %}" style="text-decoration:none; color:inherit; display:inline-block;">
+        <div class="admin-badge">ADMIN PANEL</div>
+    </a>
+</nav>
+
+<section class="container">
+
+<h1>Manage Vehicles</h1>
+
+<a href="/add_vehicle/" class="add-btn">ADD VEHICLE</a>
+
+<table>
+
+<thead>
+<tr>
+<th>Vehicle</th>
+<th>Number</th>
+<th>Brand</th>
+<th>Category</th>
+<th>Fuel</th>
+<th>Rent/Day</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for v in vehicles %}
+<tr>
+    <td>{{ v.vehicle_name }}</td>
+    <td>{{ v.vehicle_number }}</td>
+    <td>{{ v.brand }}</td>
+    
+    <td>
+        {% if v.vehicle_type == "2W" %}Two Wheeler
+        {% elif v.vehicle_type == "3W" %}Three Wheeler
+        {% elif v.vehicle_type == "4W" %}Four Wheeler
+        {% elif v.vehicle_type == "HV" %}Heavy Vehicle
+        {% else %}-
+        {% endif %}
+    </td>
+    
+    <td>{{ v.fuel_type }}</td>
+    <td>₹{{ v.rent_price }}</td>
+    <td>{{ v.status }}</td>
+
+<td class="action">
+
+<a href="/edit_vehicle/{{ v.id }}/">
+<button>Edit</button>
+</a>
+
+<form action="/delete_vehicle/{{ v.id }}/" method="POST">
+{% csrf_token %}
+<button class="delete">Delete</button>
+</form>
+
+</td>
+
+</tr>
+{% empty %}
+<tr>
+<td colspan="7">No vehicles available</td>
+</tr>
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</section>
+
+</body>
+</html>

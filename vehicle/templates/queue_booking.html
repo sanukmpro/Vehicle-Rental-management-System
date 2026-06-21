@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Queue Booking - {{ vehicle.brand }} {{ vehicle.vehicle_name }}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', sans-serif;
+}
+
+body{
+    background:#ffffff;
+    color:#111;
+}
+
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:#fff;
+    padding:22px 80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+    z-index:100;
+}
+
+.logo{
+    font-weight:600;
+    letter-spacing:2px;
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#111;
+    font-size:14px;
+}
+
+.spacer{
+    height:100px;
+}
+
+.page-title{
+    padding:80px 80px 40px 80px;
+}
+
+.page-title h1{
+    font-size:48px;
+    font-weight:600;
+}
+
+.booking-container{
+    padding:0 80px 120px 80px;
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+}
+
+.vehicle-info{
+    flex:1 1 350px;
+    background:#fafafa;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.vehicle-info img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.vehicle-info h2{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.vehicle-info .detail{
+    margin-bottom:6px;
+    font-size:14px;
+    color:#555;
+}
+
+.booking-form{
+    flex:1 1 350px;
+    background:#fafafa;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.booking-form h2{
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:10px 12px;
+    font-size:14px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    outline:none;
+    transition:0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#111;
+}
+
+.queue-btn{
+    display:inline-block;
+    background:#111;
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    padding:12px 20px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+    width:100%;
+}
+
+.queue-btn:hover{
+    background:#333;
+}
+
+footer{
+    padding:50px 80px;
+    border-top:1px solid #eee;
+    font-size:14px;
+    color:#777;
+    margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo">VELOCITY</div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">home</a>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="page-title">
+    <h1>Queue Your Booking</h1>
+</div>
+
+<div class="booking-container">
+
+    <!-- Vehicle Info -->
+    <div class="vehicle-info">
+        {% if vehicle.vehicle_image %}
+            <img src="{{ vehicle.vehicle_image.url }}" alt="{{ vehicle.brand }} {{ vehicle.vehicle_name }}">
+        {% else %}
+            <img src="https://via.placeholder.com/400x300" alt="No Image">
+        {% endif %}
+        <h2>{{ vehicle.brand }} {{ vehicle.vehicle_name }}</h2>
+        <div class="detail"><strong>Type:</strong> 
+            {% if vehicle.vehicle_type == "2W" %}Two Wheeler
+            {% elif vehicle.vehicle_type == "3W" %}Three Wheeler
+            {% elif vehicle.vehicle_type == "4W" %}Four Wheeler
+            {% elif vehicle.vehicle_type == "HV" %}Heavy Vehicle
+            {% endif %}
+        </div>
+        <div class="detail"><strong>Rent Price:</strong> ₹{{ vehicle.rent_price }}/day</div>
+        <div class="detail"><strong>Vehicle No:</strong> {{ vehicle.vehicle_number|default:"No description available." }}</div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="booking-form">
+        <h2>Book This Vehicle</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="booking-date">Date</label>
+                <input type="date" id="booking-date" name="booking_date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="booking-time">Time</label>
+                <input type="time" id="booking-time" name="booking_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="num-days">Number of Days</label>
+                <input type="number" id="num-days" name="num_days" min="1" value="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="driver-needed">Do you need a driver?</label>
+                <select id="driver-needed" name="driver_needed" required>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="queue-btn" {% if already_in_cart %}disabled style="background:#999; cursor:not-allowed;"{% endif %}>
+                {% if already_in_cart %}
+                    Already Queued
+                {% else %}
+                    Queue Booking
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<footer>
+© 2026 Velocity Rentals
+</footer>
+
+</body>
+</html>

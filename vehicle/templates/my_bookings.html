@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    color:#111;
+}
+
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:#fff;
+    padding:18px 80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+    z-index:100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.booking-actions{
+    margin-top:12px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;        /* vertical alignment */
+}
+
+.booking-actions form{
+    margin:0;                  /* remove extra spacing */
+}
+
+.booking-actions button{
+    padding:10px 18px;
+    font-weight:600;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+    min-width:140px;           /* uniform width */
+    text-align:center;
+}
+
+.logo{
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:2px;
+}
+
+.nav-links{
+    display:flex;
+    gap:25px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#111;
+    font-size:14px;
+    font-weight:500;
+}
+
+.spacer{
+    height:80px;
+}
+
+.page-title{
+    padding:80px 80px 20px 80px;
+}
+
+.page-title h1{
+    font-size:36px;
+    font-weight:700;
+    color:#111;
+}
+
+.booking-container{
+    padding:0 80px 80px 80px;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.booking-card{
+    display:flex;
+    gap:20px;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    flex-wrap:wrap;
+    align-items:flex-start;
+    transition:0.3s;
+}
+
+.booking-card:hover{
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+}
+
+.vehicle-info{
+    flex:1 1 250px;
+    min-width:250px;
+}
+
+.vehicle-info img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:12px;
+    border:1px solid #ddd;
+}
+
+.vehicle-info h2{
+    font-size:20px;
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+.vehicle-info div{
+    font-size:14px;
+    color:#555;
+    margin-bottom:4px;
+}
+
+.booking-info{
+    flex:1 1 300px;
+    min-width:300px;
+}
+
+.booking-info div{
+    margin-bottom:8px;
+    font-size:14px;
+}
+
+.status{
+    font-weight:600;
+    padding:5px 12px;
+    border-radius:6px;
+    display:inline-block;
+    font-size:13px;
+}
+
+.status-yes{
+    background:#d4edda;
+    color:#155724;
+}
+
+.status-no{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+.booking-actions{
+    margin-top:12px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.booking-actions button{
+    padding:10px 20px;
+    font-weight:600;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.confirm-btn{
+    background:#111;
+    color:#fff;
+}
+
+.confirm-btn:hover:not(:disabled){
+    background:#333;
+}
+
+.confirm-btn:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+.cancel-btn{
+    background:#f44336;
+    color:#fff;
+}
+
+.cancel-btn:hover{
+    background:#d32f2f;
+}
+
+footer{
+    padding:50px 80px;
+    border-top:1px solid #eee;
+    font-size:14px;
+    color:#777;
+    margin-top:40px;
+    text-align:center;
+}
+.status-pending{
+    background:#fff3cd;
+    color:#856404;
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">VELOCITY</div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">home</a>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="page-title">
+    <h1>My Bookings</h1>
+</div>
+
+<div class="booking-container">
+    {% if bookings %}
+        {% for booking in bookings %}
+        <div class="booking-card">
+            <div class="vehicle-info">
+                {% if booking.vehicle_image %}
+                    <img src="{{ booking.vehicle_image }}" alt="{{ booking.brand }} {{ booking.vehicle_name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/400x300" alt="No Image">
+                {% endif %}
+                <h2>{{ booking.brand }} {{ booking.vehicle_name }}</h2>
+                <div>Type: 
+                    {% if booking.vehicle_type == "2W" %}Two Wheeler
+                    {% elif booking.vehicle_type == "3W" %}Three Wheeler
+                    {% elif booking.vehicle_type == "4W" %}Four Wheeler
+                    {% elif booking.vehicle_type == "HV" %}Heavy Vehicle
+                    {% endif %}
+                </div>
+                <div>Vehicle No: {{ booking.vehicle_number }}</div>
+                <div>Rent/Day: ₹{{ booking.rent_price }}</div>
+            </div>
+
+            <div class="booking-info">
+                <div>Date: {{ booking.booking_date }}</div>
+                <div>Time: {{ booking.booking_time }}</div>
+                <div>Number of Days: {{ booking.num_days }}</div>
+                <div>Driver Needed: {{ booking.driver_needed|title }}</div>
+                <!--<div>Lowest Driver Bid: ₹{% if booking.lowest_driver_bid %}{{ booking.lowest_driver_bid }}{% else %}0{% endif %}</div> -->
+                <div class="status 
+                    {% if booking.status == 'accepted' %}status-yes
+                    {% elif booking.status == 'rejected' %}status-no
+                    {% else %}status-pending
+                    {% endif %}
+                ">
+                    Status: 
+                    {% if booking.status == "accepted" %}
+                        Accepted
+                    {% elif booking.status == "rejected" %}
+                        Rejected
+                    {% else %}
+                        Pending
+                    {% endif %}
+                </div>
+                <!--<div style="margin-top:8px;font-weight:600;font-size:15px;">
+                    Total Price: ₹{{ booking.total_price }}
+                </div> -->
+
+                <div class="booking-actions">
+
+                    {% if booking.user_accepted %}
+                        <button class="confirm-btn" disabled>Payment Confirmed</button>
+
+                    {% elif booking.status == "accepted" %}
+                        <button class="confirm-btn" disabled>Accepted</button>
+
+                    {% elif booking.status == "rejected" %}
+                        <button class="cancel-btn" disabled>Rejected</button>
+
+                    {% else %}
+                        {% if booking.driver_needed == "yes" %}
+                            {% if booking.has_bid %}
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                    <input type="hidden" name="action" value="confirm">
+                                    <button type="submit" class="confirm-btn">
+                                        Confirm (₹{{ booking.lowest_bid }})
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button class="confirm-btn" disabled>No Bids Yet</button>
+                            {% endif %}
+
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <input type="hidden" name="action" value="cancel">
+                                <button type="submit" class="cancel-btn">Cancel</button>
+                            </form>
+
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</div>
+
+<footer>
+© 2026 Velocity Rentals
+</footer>
+
+</body>
+</html>

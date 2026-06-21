@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Vehicle Rental</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-badge {
+    font-size: 12px;
+    background: #111;
+    color: #fff;
+    padding: 4px 12px;
+    letter-spacing: 1px;
+}
+
+/* DASHBOARD */
+.dashboard {
+    padding: 60px;
+}
+
+.dashboard h1 {
+    font-size: 42px;
+    font-weight: 500;
+    margin-bottom: 50px;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    border: 1px solid #eee;
+    padding: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn{
+    margin-left:15px;
+    padding:6px 14px;
+    font-size:12px;
+    background:#fff;
+    border:1px solid #111;
+    cursor:pointer;
+    letter-spacing:1px;
+}
+
+.logout-btn:hover{
+    background:#111;
+    color:#fff;
+}
+
+.card:hover {
+    border: 1px solid #111;
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">VEHICLE RENTAL</div>
+
+    <div style="display:flex; align-items:center; gap:12px;">
+        <a href="{% url 'admin_dashboard' %}" style="text-decoration:none; color:inherit; display:inline-block;">
+            <div class="admin-badge">ADMIN PANEL</div>
+        </a>
+    </div>
+</nav>
+
+
+<section class="dashboard">
+    <h1>Admin Dashboard</h1>
+
+    <div class="grid">
+        <div class="card" onclick="goTo('/add_driver/')">
+            <h3>Add Driver</h3>
+            <p>Create and register new drivers.</p>
+        </div>
+
+        <div class="card" onclick="goTo('/manage_drivers/')">
+            <h3>Manage Drivers</h3>
+            <p>Edit or remove drivers.</p>
+        </div>
+
+        <div class="card" onclick="goTo('/add_vehicle/')">
+            <h3>Add Vehicle</h3>
+            <p>Add new vehicles to fleet.</p>
+        </div>
+
+        <div class="card" onclick="goTo('/manage_vehicle/')">
+            <h3>Manage Vehicles</h3>
+            <p>Edit or delete vehicles.</p>
+        </div>
+
+        <div class="card" onclick="goTo('/manage_rental_status/')">
+            <h3>Manage Rental Status</h3>
+            <p>Update booking and rental state.</p>
+        </div>
+
+        <div class="card" onclick="logout()">
+            <h3>Logout</h3>
+            <p>Sign out of admin panel.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+function goTo(page){
+    window.location.href = page;
+}
+
+function logout(){
+    window.location.href = "/logout/";
+}
+</script>
+
+</body>
+</html>

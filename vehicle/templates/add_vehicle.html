@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Vehicle | Admin</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-badge {
+    font-size: 12px;
+    background: #111;
+    color: #fff;
+    padding: 4px 12px;
+}
+
+/* SECTION */
+.container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-box {
+    width: 450px;
+}
+
+.form-box h1 {
+    font-size: 40px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.form-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* FORM */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select {
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+input:focus, select:focus {
+    border: 1px solid #000;
+}
+
+button {
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #333;
+}
+
+.success {
+    display: none;
+    color: green;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.error {
+    display: none;
+    color: red;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">VEHICLE RENTAL</div>
+    <a href="{% url 'admin_dashboard' %}" style="text-decoration:none; color:inherit; display:inline-block;">
+        <div class="admin-badge">ADMIN PANEL</div>
+    </a>
+</nav>
+
+<section class="container">
+<div class="form-box">
+
+<h1>Add Vehicle</h1>
+<p>Register a new vehicle to the fleet.</p>
+
+<form action="/add_vehicle/" method="POST" enctype="multipart/form-data">
+
+<label class="success" id="successMsg">Vehicle added successfully.</label>
+<label class="error" id="errorMsg">Something went wrong.</label>
+
+<input type="text" name="vehicle_name" placeholder="Vehicle Name" required>
+
+<input type="text" name="vehicle_number" placeholder="Vehicle Number (KL07AB1234)" required>
+
+<input type="text" name="brand" placeholder="Vehicle Brand" required>
+
+<input type="number" name="rent_price" placeholder="Rental Price Per Day" required>
+
+<label>Fuel Type</label>
+<select name="fuel_type">
+<option value="petrol">Petrol</option>
+<option value="diesel">Diesel</option>
+<option value="electric">Electric</option>
+</select>
+<label>Vehicle Category</label>
+
+<select name="vehicle_type">
+    <option value="2W">Two Wheeler</option>
+    <option value="3W">Three Wheeler</option>
+    <option value="4W">Four Wheeler</option>
+    <option value="HV">Heavy Vehicle</option>
+</select>
+
+<label for="">Status</label>
+<select name="status">
+<option value="available">Available</option>
+<option value="rented">Rented</option>
+<option value="maintenance">Maintenance</option>
+</select>
+
+<label>Vehicle Image</label>
+<input type="file" name="vehicle_image" accept="image/*">
+
+<button type="submit">ADD VEHICLE</button>
+
+</form>
+
+</div>
+</section>
+
+</body>
+</html>

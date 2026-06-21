@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Rental | Admin</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Helvetica Neue",Arial,sans-serif;
+}
+
+body{
+background:#fff;
+color:#111;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:22px 60px;
+border-bottom:1px solid #eee;
+}
+
+.logo{
+font-size:20px;
+font-weight:600;
+}
+
+.admin-badge{
+font-size:12px;
+background:#111;
+color:#fff;
+padding:4px 12px;
+}
+
+.container{
+min-height:90vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.form-box{
+width:450px;
+}
+
+.form-box h1{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.form-box p{
+font-size:14px;
+color:#666;
+margin-bottom:40px;
+}
+
+form{
+display:flex;
+flex-direction:column;
+}
+
+input,select{
+padding:16px;
+margin-bottom:20px;
+border:1px solid #ddd;
+font-size:14px;
+}
+
+button{
+padding:16px;
+background:#111;
+color:#fff;
+border:none;
+font-size:14px;
+cursor:pointer;
+}
+
+button:hover{
+background:#333;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">VEHICLE RENTAL</div>
+<a href="{% url 'admin_dashboard' %}" style="text-decoration:none; color:inherit; display:inline-block;">
+    <div class="admin-badge">ADMIN PANEL</div>
+</a>
+</nav>
+
+<section class="container">
+
+<div class="form-box">
+
+<h1>Edit Rental</h1>
+<p>Update rental booking and status.</p>
+
+<form action="/update_rental/1" method="POST">
+
+<label>Customer Name</label>
+<input type="text" name="customer" value="Rahul" required>
+
+<label>Vehicle</label>
+<select name="vehicle">
+<option selected>Swift</option>
+<option>Innova</option>
+<option>Creta</option>
+</select>
+
+<label>Driver</label>
+<select name="driver">
+<option selected>John</option>
+<option>David</option>
+<option>Anil</option>
+</select>
+
+<label>Pickup Date</label>
+<input type="date" name="start_date" value="2026-03-10" required>
+
+<label>Return Date</label>
+<input type="date" name="end_date" value="2026-03-12" required>
+
+<label>Rental Status</label>
+<select name="status">
+<option value="booked">Booked</option>
+<option value="active" selected>Active</option>
+<option value="completed">Completed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+
+<button type="submit">SAVE CHANGES</button>
+
+</form>
+
+</div>
+
+</section>
+
+</body>
+</html>

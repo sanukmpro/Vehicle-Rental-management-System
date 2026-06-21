@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', sans-serif;
+}
+
+body{
+    background:#ffffff;
+    color:#111;
+}
+
+/* NAVBAR */
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:#fff;
+    padding:22px 80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+    z-index:100;
+}
+
+.logo{
+    font-weight:600;
+    letter-spacing:2px;
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#111;
+    font-size:14px;
+}
+
+/* SPACING */
+.spacer{
+    height:100px;
+}
+
+/* TITLE */
+.page-title{
+    padding:80px 80px 40px 80px;
+}
+
+.page-title h1{
+    font-size:48px;
+    font-weight:600;
+}
+
+/* NOTIFICATIONS */
+.container{
+    padding:0 80px 100px 80px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.notification{
+    background:#fafafa;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    transition:0.3s;
+}
+
+.notification:hover{
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+.notification .message{
+    font-size:15px;
+    margin-bottom:8px;
+}
+
+.notification .time{
+    font-size:12px;
+    color:#777;
+}
+
+/* EMPTY */
+.empty{
+    font-size:14px;
+    color:#777;
+}
+
+/* FOOTER */
+footer{
+    padding:50px 80px;
+    border-top:1px solid #eee;
+    font-size:14px;
+    color:#777;
+    margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">VELOCITY</div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- TITLE -->
+<div class="page-title">
+    <h1>Notifications</h1>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+    {% if notifications %}
+        {% for n in notifications %}
+            <div class="notification">
+                <div class="message">{{ n.message }}</div>
+                <div class="time">{{ n.created_at }}</div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">No notifications yet.</div>
+    {% endif %}
+</div>
+
+<!-- FOOTER -->
+<footer>
+© 2026 Velocity Rentals
+</footer>
+
+</body>
+</html>

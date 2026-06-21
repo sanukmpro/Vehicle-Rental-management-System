@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Login | Vehicle Rental</title>
+<title>Login | Vehicle Rental</title>
 
 <style>
 * {
@@ -33,12 +33,17 @@ nav {
     letter-spacing: 1px;
 }
 
-.admin-badge {
-    font-size: 12px;
-    background: #111;
-    color: #fff;
-    padding: 4px 10px;
-    letter-spacing: 1px;
+.nav-links a {
+    text-decoration: none;
+    color: #111;
+    margin-left: 40px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: opacity 0.3s ease;
+}
+
+.nav-links a:hover {
+    opacity: 0.6;
 }
 
 /* LOGIN SECTION */
@@ -103,14 +108,16 @@ button:hover {
     margin-top: 20px;
     font-size: 13px;
     text-align: center;
-    color: #666;
 }
 
-#err {
-    display: none;
-    color: red;
-    font-size: 13px;
-    margin-bottom: 15px;
+.extra a {
+    text-decoration: none;
+    color: #111;
+    font-weight: 500;
+}
+
+.extra a:hover {
+    text-decoration: underline;
 }
 </style>
 </head>
@@ -119,63 +126,59 @@ button:hover {
 
 <nav>
     <div class="logo">VEHICLE RENTAL</div>
-    <div class="admin-badge">ADMIN PANEL</div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="#">Models</a>
+        <a href="#">Contact</a>
+    </div>
 </nav>
 
 <section class="login-container">
     <div class="login-box">
-        <h1>Admin Login</h1>
-        <p>Restricted access. Authorized personnel only.</p>
+        <h1>Login</h1>
+        <p>Access your account to manage bookings.</p>
 
-        <form>
-            <input type="email" id="email" placeholder="Admin Email" required>
+        <form method="POST">
+            <input type="email" id="email" placeholder="Email Address" required>
             <input type="password" id="password" placeholder="Password" required>
-            <label id="err"></label>
+            <label id="err" style="display: none;color: red;">sdffsdfsd</label>
             <button type="submit" id="submit">SIGN IN</button>
         </form>
 
         <div class="extra">
-            Vehicle Rental Administration Portal
+            Don't have an account? <a href="{% url 'signup' %}">Create one</a>
         </div>
     </div>
 </section>
-
 <script>
     const submit = document.getElementById("submit");
     const email = document.getElementById("email");
-    const password = document.getElementById("password");
+    const password = document.getElementById("password")
     const err = document.getElementById("err");
-
-    submit.addEventListener("click", (e) => {
+    submit.addEventListener("click",(e)=>{
         e.preventDefault();
-
-        fetch("/admin_login/", {
-            method: "POST",
-            headers: {
+        fetch("/login/",{
+            method:"POST",
+            headers:{
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value
+            body:JSON.stringify({
+                email : email.value,
+                password : password.value
             })
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            if (data["admin_verified"]) {
-                window.location.href = "/admin_dashboard/";
-            } 
-            else {
-                err.innerText = "Invalid admin credentials";
-                err.style.display = "block";
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data["login_state"]=="login_success"){
+                window.location.href = "/"
+            }else if(data["login_state"]=="password_wrong"){
+                err.innerText = "wrong email or password"
+                err.style.display = "block"
+            }else if(data["login_state"]=="email_wrong"){
+                err.innerText = "user doesn't exist"
+                err.style.display = "block"
             }
         })
-        .catch(() => {
-            err.innerText = "Invalid admin credentials.";
-            err.style.display = "block";
-        });
-    });
+    })
 </script>
-
 </body>
 </html>

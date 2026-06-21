@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Requests</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif;}
+body{background:#ffffff; color:#111;}
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:#fff;
+    padding:22px 80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+    z-index:100;
+}
+.logo{font-weight:600; letter-spacing:2px;}
+.nav-links{display:flex; gap:30px;}
+.nav-links a{text-decoration:none; color:#111; font-size:14px;}
+
+.spacer{height:100px;}
+.page-title{padding:80px 80px 40px 80px;}
+.page-title h1{font-size:36px; font-weight:600;}
+
+.grid{
+    padding:0 80px 120px 80px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    gap:40px;
+}
+.card-content p{
+    font-size:13px;
+    color:#4b5563;
+}
+
+.model-name{
+    font-size:17px;
+    font-weight:600;
+    color:#111;
+}
+
+.price{
+    font-size:13px;
+    font-weight:600;
+    background:#111;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:6px;
+    margin-top:4px;
+}
+
+/* New: booking info block */
+.booking-info{
+    background:#f1f5f9;
+    padding:10px;
+    border-radius:8px;
+    margin-top:6px;
+    font-size:13px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+/* Improve badge look */
+.accepted-badge{
+    display:inline-block;
+    padding:5px 12px;
+    font-size:12px;
+    font-weight:600;
+    border-radius:20px;
+    margin-top:8px;
+}
+
+/* Improve form spacing */
+.bid-form{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+.card{
+    overflow:hidden;
+    background:#fafafa;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    display:flex;
+    flex-direction:column;
+    transition:0.3s;
+}
+.card:hover{box-shadow:0 8px 20px rgba(0,0,0,0.1);}
+.card img{width:100%; height:200px; object-fit:cover; transition:0.5s ease;}
+.card:hover img{transform:scale(1.05);}
+.card-content{padding:15px; display:flex; flex-direction:column; gap:8px;}
+
+.model-name{font-size:16px; font-weight:500;}
+.price{font-size:14px; font-weight:600; background:#111; color:#fff; padding:6px 12px; display:inline-block; border-radius:6px;}
+
+.bid-form{display:flex; gap:8px; margin-top:10px;}
+.bid-form input[type="number"]{
+    flex:1; padding:8px; border:1px solid #d1d5db; border-radius:6px; outline:none;
+}
+.bid-form input[type="number"]:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 2px rgba(37,99,235,0.2);
+}
+.bid-form button{
+    padding:8px 14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; transition:0.2s;
+}
+.bid-form button:hover{background:#1d4ed8;}
+
+.accepted-badge{
+    display:inline-block;
+    padding:4px 10px;
+    background:#16a34a;
+    color:#fff;
+    font-size:12px;
+    font-weight:600;
+    border-radius:12px;
+    margin-top:8px;
+}
+
+footer{
+    padding:50px 80px;
+    border-top:1px solid #eee;
+    font-size:14px;
+    color:#777;
+}
+.empty-state{text-align:center; color:#6b7280; font-size:16px; margin-top:40px;}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">VELOCITY</div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="page-title">
+    <h1>Driver Requests for {{ driver.name }}</h1>
+</div>
+
+<div class="grid">
+    {% for req in requests %}
+        <div class="card">
+    
+            {% if req.vehicle_image %}
+                <img src="{{ req.vehicle_image }}">
+            {% else %}
+                <img src="https://via.placeholder.com/400x200?text=No+Image">
+            {% endif %}
+    
+            <div class="card-content">
+    
+                <div class="model-name">
+                    {{ req.brand }} {{ req.vehicle_name }}
+                </div>
+    
+                <p>Type: {{ req.vehicle_type }}</p>
+                <p>Fuel: {{ req.fuel_type }}</p>
+                <p>Rent/day: ₹{{ req.rent_price }}</p>
+                <p>Booking Date: {{ req.booking_date }}</p>
+                <p>Booking Time: {{ req.booking_time }}</p>
+                <p>Days: {{ req.num_days }}</p>
+    
+                <p class="price">Lowest Bid: ₹{{ req.lowest_bid }}</p>
+    
+                {% if req.bid_status == "winning" %}
+    <span class="accepted-badge" style="background:#10b981;">
+        You are winning
+    </span>
+
+    {% else %}
+        {% if req.bid_status == "outbid" %}
+            <span class="accepted-badge" style="background:#ef4444;">
+                Outbid - Bid again!
+            </span>
+        {% endif %}
+
+        <form method="post" class="bid-form">
+            {% csrf_token %}
+            <input type="hidden" name="request_id" value="{{ req.id }}">
+            <input type="number" name="bid_amount" min="1" placeholder="Enter your bid ₹" required>
+            <button type="submit">Bid</button>
+        </form>
+        {% endif %}
+    
+            </div>
+        </div>
+    {% empty %}
+        <p class="empty-state">No requests available.</p>
+    {% endfor %}
+    </div>
+
+<footer>
+© 2026 Velocity Rentals
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Vehicle Rental</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #111;
+    margin-left: 40px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: opacity 0.3s ease;
+}
+
+.nav-links a:hover {
+    opacity: 0.6;
+}
+
+/* REGISTER SECTION */
+.register-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-box {
+    width: 460px;
+}
+
+.register-box h1 {
+    font-size: 42px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.register-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* FORM */
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.row input {
+    flex: 1;
+}
+
+input {
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+input:focus {
+    border: 1px solid #000;
+}
+
+button {
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #333;
+}
+
+.extra {
+    margin-top: 20px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.extra a {
+    text-decoration: none;
+    color: #111;
+    font-weight: 500;
+}
+
+.extra a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    nav {
+        padding: 20px;
+    }
+
+    .register-box {
+        width: 90%;
+    }
+
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">VEHICLE RENTAL</div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="#">Models</a>
+        <a href="{% url 'login' %}">Login</a>
+    </div>
+</nav>
+
+<section class="register-container">
+    <div class="register-box">
+        <h1>Create Account</h1>
+        <p>Join us and start booking premium vehicles.</p>
+
+        <div class="form">
+            <div class="row">
+                <input type="text" placeholder="First Name" id="firstName" required>
+                <input type="text" placeholder="Last Name" id="lastName" required>
+            </div>
+
+            <input type="email" placeholder="Email Address" id="email" required>
+            <input type="password" placeholder="Password" id="passwd" required>
+            <input type="password" placeholder="Confirm Password" id="confirm-passwd" required>
+
+            <button type="submit" id="createAccount">CREATE ACCOUNT</button>
+        </div>
+
+        <div class="extra">
+            Already have an account? <a href="login.html">Sign in</a>
+        </div>
+    </div>
+</section>
+<script>
+    const createAccButton = document.getElementById("createAccount");
+    const firstName = document.getElementById("firstName");
+    const lastName = document.getElementById("lastName");
+    const email = document.getElementById("email");
+    const passwd = document.getElementById("passwd");
+    const confirm_passwd = document.getElementById("confirm-passwd");
+
+    createAccButton.addEventListener("click",(e)=>{
+        if(confirm_passwd.value == passwd.value){
+            fetch("/signup/",{
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                action:"create_acc",
+                firstName:firstName.value,
+                lastName:lastName.value,
+                email:email.value,
+                passwd:passwd.value
+            })
+            }).then(res=>res.json())
+            .then(data=>{
+                console.log(data)
+                if(data["account_created"]){
+                    window.location.href="/login/"
+                }else if(!data["account_created"]){
+                    console.log("error")
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

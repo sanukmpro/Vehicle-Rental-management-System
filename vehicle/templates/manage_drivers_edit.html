@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Driver | Admin</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-badge {
+    font-size: 12px;
+    background: #111;
+    color: #fff;
+    padding: 4px 12px;
+    letter-spacing: 1px;
+}
+
+/* SECTION */
+.container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-box {
+    width: 450px;
+}
+
+.form-box h1 {
+    font-size: 40px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.form-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* FORM */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select {
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border: 1px solid #000;
+}
+
+#preview{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    border:1px solid #ddd;
+    margin-bottom:20px;
+}
+
+button {
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #333;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">VEHICLE RENTAL</div>
+<a href="{% url 'admin_dashboard' %}" style="text-decoration:none; color:inherit; display:inline-block;">
+    <div class="admin-badge">ADMIN PANEL</div>
+</a>
+</nav>
+
+<section class="container">
+
+<div class="form-box">
+
+<h1>Edit Driver</h1>
+<p>Update driver information.</p>
+
+<form action="/update_driver/" method="POST" enctype="multipart/form-data">
+
+<input type="hidden" name="id" value="{{ driver.id }}">
+
+<input type="text" name="name" value="{{ driver.name }}" placeholder="Driver Full Name" required>
+
+<input type="text" name="license" value="{{ driver.license_number }}" placeholder="License Number" required>
+
+<input type="text" name="phone" value="{{ driver.phone }}" placeholder="Contact Number" required>
+
+<input type="email" name="email" value="{{ driver.email }}" placeholder="Driver Email" required>
+<label>Vehicle Categories</label>
+
+<label><input type="checkbox" class="vtype" value="2W"> Two Wheeler</label>
+<label><input type="checkbox" class="vtype" value="3W"> Three Wheeler</label>
+<label><input type="checkbox" class="vtype" value="4W"> Four Wheeler</label>
+<label><input type="checkbox" class="vtype" value="HV"> Heavy Vehicle</label>
+<label>Driver Photo</label>
+{% if driver.photo %}
+<img id="preview" src="{{ driver.photo.url }}">
+{% endif %}
+<input type="file" name="photo" accept="image/*">
+
+<select name="status">
+
+<option value="available" {% if driver.status == "available" %}selected{% endif %}>Available</option>
+
+<option value="assigned" {% if driver.status == "assigned" %}selected{% endif %}>Assigned</option>
+
+<option value="inactive" {% if driver.status == "inactive" %}selected{% endif %}>Inactive</option>
+
+
+</select>
+<input type="hidden" name="vehicle_types" id="vehicle_types">
+<button type="submit">UPDATE DRIVER</button>
+
+</form>
+
+</div>
+
+</section>
+
+</body>
+</html>
+<script>
+    const existingTypes = JSON.parse("{{ driver.vehicle_types|escapejs }}");
+    
+    document.querySelectorAll(".vtype").forEach(cb => {
+        if (existingTypes.includes(cb.value)) {
+            cb.checked = true;
+        }
+    });
+    </script>
+<script>
+    document.querySelector("form").addEventListener("submit", function() {
+        const types = Array.from(document.querySelectorAll(".vtype:checked"))
+                           .map(cb => cb.value);
+    
+        document.getElementById("vehicle_types").value = JSON.stringify(types);
+    });
+</script>
