@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | Vehicle Rental</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-badge {
+    font-size: 12px;
+    background: #111;
+    color: #fff;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+}
+
+/* LOGIN SECTION */
+.login-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 420px;
+}
+
+.login-box h1 {
+    font-size: 42px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.login-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* FORM */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+input:focus {
+    border: 1px solid #000;
+}
+
+button {
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #333;
+}
+
+.extra {
+    margin-top: 20px;
+    font-size: 13px;
+    text-align: center;
+    color: #666;
+}
+
+#err {
+    display: none;
+    color: red;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">VEHICLE RENTAL</div>
+    <div class="admin-badge">ADMIN PANEL</div>
+</nav>
+
+<section class="login-container">
+    <div class="login-box">
+        <h1>Admin Login</h1>
+        <p>Restricted access. Authorized personnel only.</p>
+
+        <form>
+            <input type="email" id="email" placeholder="Admin Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <label id="err"></label>
+            <button type="submit" id="submit">SIGN IN</button>
+        </form>
+
+        <div class="extra">
+            Vehicle Rental Administration Portal
+        </div>
+    </div>
+</section>
+
+<script>
+    const submit = document.getElementById("submit");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const err = document.getElementById("err");
+
+    submit.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        fetch("/admin_login/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            if (data["admin_verified"]) {
+                window.location.href = "/admin_dashboard/";
+            } 
+            else {
+                err.innerText = "Invalid admin credentials";
+                err.style.display = "block";
+            }
+        })
+        .catch(() => {
+            err.innerText = "Invalid admin credentials.";
+            err.style.display = "block";
+        });
+    });
+</script>
+
+</body>
+</html>
